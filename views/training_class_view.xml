@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action window training class-->
+    <record id="training_class_action" model="ir.actions.act_window">
+        <field name="name">Training Class</field>
+        <field name="res_model">training.class</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Utama Training-->
+    <menuitem
+        id="training_parent_menu"
+        name="Training"
+    />
+
+    <!-- Menu Header-->
+    <menuitem
+        id="training_class_menu"
+        name="Training Class"
+        parent="training_parent_menu"
+        action="training_class_action"
+    />
+
+    <!-- Tree View Training Class -->
+    <record id="training_class_view_tree" model="ir.ui.view">
+        <field name="name">training.class.view.tree</field>
+        <field name="model">training.class</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"></field>
+                <field name="max_peserta"></field>
+                <field name="duration"></field>
+                <field name="class_type"></field>
+                <field name="active" widget="boolean_toggle"></field>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view Training Class-->
+    <record id="training_class_view_form" model="ir.ui.view">
+        <field name="name">training.class.view.form</field>
+        <field name="model">training.class</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                        <field name="state" widget="statusbar"></field>
+                        <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button string="Set To Draft" name="action_draft" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                        <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                        <button string="Change" name="action_call_wizard" type="object" invisible="state != 'confirm'" context="{'default_name': name, 'default_max_person_wizard': max_peserta}" />
+                </header>
+                <sheet>
+                    <group>
+                        <group name="kolom kiri" string="Grup 1">
+                            <field name="name" readonly="state != 'draft'"></field>                    
+                            <field name="max_peserta" readonly="state != 'draft'"></field>
+                            <field name="duration" readonly="state != 'draft'"></field>
+                            <field name="duration_days"></field>
+                            <field name="class_type" readonly="state != 'draft'"></field>                            
+                        </group>
+                        <group string="Grup 2">
+                            <field name="active" widget="boolean_toggle"></field>
+                            <field name="mentor_id" readonly="state != 'draft'" domain="[('country_id', '=', 'Indonesia')]"></field>
+                            <field name="phone_mentor_id"></field>
+                            <field name="tag_ids" widget="many2many_tags" 
+                            options="{'color_field':'color', 'no_create_edit':True,'no_create':True}"></field>
+                            <field name="description" force_save="1" readonly="1"></field>
+                        </group>
+                        <group string="Grup 3">
+                            <field name="start_date" readonly="state != 'draft'"></field>
+                            <field name="end_date" readonly="state != 'draft'"></field>
+                            <field name="training_file" readonly="state != 'draft'"></field>
+                            <field name="logo" widget="image" readonly="state != 'draft'"></field>
+                        </group>
+
+                        <notebook>
+                            <page name="page_members" string="Members">
+                                <field name="member_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="hadir"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>                        
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

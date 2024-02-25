@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Define Category-->
+    <record id="training_category" model="ir.module.category">
+        <field name="name">Training</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- Group Training User-->
+    <record id="training_user_group" model="res.groups">
+        <field name="name">Training: User</field>
+        <field name="category_id" ref="training_category"></field>
+    </record>
+
+    <!-- Group Training Admin-->
+    <record id="training_admin_group" model="res.groups">
+        <field name="name">Training: Admin</field>
+        <field name="category_id" ref="training_category"></field>
+        <field name="implied_ids" eval="[(4, ref('training_user_group'))]"></field>
+    </record>
+
+    <!-- Record Rule User -->
+    <record id="training_user_rule" model="ir.rule">
+        <field name="name">Training: Hanya bisa akses record yang dibuat sendiri</field>
+        <field name="model_id" ref="model_training_class"></field>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('training_user_group'))]"></field>
+    </record>
+
+    <!-- Record Rule Admin -->
+    <record id="training_admin_rule" model="ir.rule">
+        <field name="name">Training: Bisa akses semua</field>
+        <field name="model_id" ref="model_training_class"></field>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('training_admin_group'))]"></field>
+    </record>
+
+</odoo>
